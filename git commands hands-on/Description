@@ -1,0 +1,18 @@
+I have made a project for learning git commands.
+It was based on HTML, CSS and JavaScript
+
+first I had created a repo on github.
+--> then i cloned it in my local using GIT CLONE command .
+--> then i started working on it and then i add the work using GIT ADD command .  
+--> the i commit the changes using GIT COMMIT command 
+--> I tries to give a meaningfull commit message for every commit.
+--> then i push all the changes on cloud repo which is on github .
+I also practised git INIT command , Git CHECKOUT for branching .
+
+I know so many commands of git but i have`nt used yet, but in case i have to used them i will do it. 
+
+here is the link of repo on which i have been worked. 
+https://github.com/pratham7869/bill.git
+
+for upcoming learning i have made a repo 
+https://github.com/pratham7869/TaxInvoice.git
