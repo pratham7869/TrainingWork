@@ -1,0 +1,30 @@
+     alter command :-
+The alter command allow us to altering the structure of table .
+like add a new column ,drop a column , rename column , add constraints etc.
+
+1) how to add a column :-
+   alter table table_name 
+   add (field_1,field_2,....);
+2) how to modify column :-
+   alter table table_name
+   modify field_name 
+   data_type;
+3) how to delete a column:-
+   alter table table_name 
+   drop column
+   field_name ;
+4) how to rename a column name :-
+   alter table table_name 
+   rename field_name to new_field_name;
+5) how to rename a table name :-
+   alter table table_name rename to new_table_name;
+6) how to add constraints in table:-
+   alter table table_name 
+   add constraint constraint_name 
+   constraint_type (field_name);
+7) how to add foreignkey  constraints in table:-
+   alter table table_name 
+   add constraint constraint_name 
+   foreign key(field_name) references master_table_name(reference_column_name);
+8) how to drop foreign key from table :-
+   alter table table_name drop foreign key constraint_name;
