@@ -1,0 +1,32 @@
+Creating a word count program using Hadoop MapReduce involves writing a Java application that uses the Hadoop API to process large volumes of text data. The goal of the word count program is to count how many times each word appears across a set of documents. Here’s a step-by-step explanation of how this can be done:
+
+### 1. Setting Up Hadoop
+First, you need to have Hadoop installed and configured on your system. Hadoop runs on Linux, and it requires Java. You can set up Hadoop in standalone mode for development and testing.
+
+
+### 2. Writing the MapReduce Program
+A MapReduce job usually consists of three main parts: the Mapper, the Reducer, and the Driver.
+
+#### 2.1 Mapper
+The Mapper's job is to process the input data. In the case of a word count, the Mapper reads text files, breaks down the text into words, and outputs each word with the count of 1. 
+
+#### 2.2 Reducer
+The Reducer's job is to take the output from the Mapper and combine the data (in this case, sum up all the counts for each word).
+
+#### 2.3 Driver
+The Driver configures and submits the MapReduce job. It specifies the data types for input and output, as well as the classes to be used for the mapper, reducer, combiner, etc.
+
+
+### 3. Running the Program
+You would compile this Java program into a JAR file, and then you can run it on your Hadoop cluster using a command similar to:
+
+bash
+hadoop jar wordcount.jar WordCount /input /output
+
+
+### 4. Output
+The output will be stored in the Hadoop filesystem (HDFS) under the directory specified by /output. Each word will be followed by its count across all the input documents.
+
+
+### Summary
+The word count program in Hadoop is a classic example to demonstrate the MapReduce paradigm, where data is processed in parallel by Mappers and then aggregated by Reducers. This model scales very well with large datasets distributed across a Hadoop cluster.
