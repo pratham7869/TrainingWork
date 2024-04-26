@@ -1,0 +1,31 @@
+I will follow these steps for project development:-
+
+Step 1: Requirement analysis 
+-->i will read the document carefully and then analyse all the functional and non functional requirement.
+-->then define the user roles, system functionality, and data entities.
+
+Step 2: Database design  
+-->design the database schema based on the requirements.
+-->define table, column, relationship, and constraints.
+-->ensure normalization to minimize redundencies and to improve effeciency.
+-->create the database acc to designed schema.
+
+Step 3: Backend developments
+-->set up python environment for backend.
+-->make connection APIs.
+-->make REST APIs using Flask.
+-->implement CRUD operations for user management, item management, and assignment management.
+-->Along with I will also do testing for APIs.
+
+Step 4: Frontend Developments  
+-->design the user interface based on the requirements using HTML, CSS, JavaScript.
+
+step 5: Integration of components
+-->then i will integrate the frontend, backend and database with each other.
+
+step 6: Testing 
+-->test the entire application
+-->solve errors and do changes if required. 
+
+
+ 
