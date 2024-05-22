@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Admin Dashboard</h2>
-    <p>Welcome, Admin!</p>
+   <h1>Welcome, {{ user.name }}</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
 
     <!-- Functionality Links -->
     <ul>

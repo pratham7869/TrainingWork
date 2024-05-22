@@ -144,6 +144,13 @@ def get_assigned_items():
     return assigned_items
 
 
+def get_assigned_item_for_emp(user_id):
+    session = get_session()
+    items = session.query(Item).join(Assets).filter(Assets.emp_id == user_id, Assets.asset_status == 'assigned').all()
+    session.close()
+    return items
+
+
 def get_assigned_item(item_id):
     session = get_session()
     item = session.query(Assets).filter(Assets.item_id == item_id, Assets.asset_status == 'assigned').first()

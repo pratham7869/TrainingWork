@@ -84,9 +84,22 @@ def login():
     return render_template('login.html', form=form, error=error)
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+
 @app.route('/employee_dashboard')
 def employee_dashboard():
-    return render_template('employee_dashboard.html')
+    if 'user_id' not in session or session.get('role') != 'employee':
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    user = get_user_by_id(user_id)
+    assigned_items = get_assigned_item_for_emp(user_id)
+
+    return render_template('employee_dashboard.html', user=user, assigned_items=assigned_items)
 
 
 @app.route('/admin_dashboard')
@@ -96,13 +109,15 @@ def admin_dashboard():
     assigned_items = get_assigned_items()
     total_employees = get_total_employees()
     unassigned_items = get_unassigned_items()
+    user_id = session['user_id']
+    user = get_user_by_id(user_id)
 
     return render_template('admin_dashboard.html',
                            total_items=total_items,
                            total_bills=total_bills,
                            assigned_items=assigned_items,
                            total_employees=total_employees,
-                           unassigned_items=unassigned_items)
+                           unassigned_items=unassigned_items, user=user)
 
 
 @app.route('/add_bill', methods=['GET', 'POST'])

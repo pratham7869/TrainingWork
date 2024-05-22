@@ -1,14 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Employee Dashboard</h2>
-    <p>Welcome, Employee!</p>
-    <!-- Employee-specific content here -->
+    <header>
+        <h1>Welcome, {{ user.name }}</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </header>
+    <main>
+        <section id="assigned-items">
+            <h2>Assigned Items</h2>
+            {% if assigned_items %}
+                <ul>
+                    {% for item in assigned_items %}
+                        <li>{{ item.item_name }} (ID: {{ item.item_id }}) - {{ item.item_status }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No items assigned.</p>
+            {% endif %}
+        </section>
+    </main>
 </body>
 </html>
