@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Remove Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Remove Employee</h1>
+    <form method="POST" action="{{ url_for('remove_employee') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.emp_id.label }} {{ form.emp_id() }}
+        </div>
+        <div>
+            {{ form.find_employee() }}
+        </div>
+        {% if user %}
+            <h2>Employee Details</h2>
+            <p>ID: {{ user.user_id }}</p>
+            <p>Name: {{ user.name }}</p>
+            <p>Department: {{ user.department }}</p>
+            <div>
+                {{ form.confirm_remove() }}
+            </div>
+        {% endif %}
+    </form>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

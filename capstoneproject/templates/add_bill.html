@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Bill</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Add New Bill</h1>
+    <form method="POST" action="{{ url_for('add_bill') }}">
+        <label for="bill_number">Bill Number:</label>
+        <input type="text" id="bill_number" name="bill_number" required><br>
+
+        <label for="bill_date">Bill Date:</label>
+        <input type="date" id="bill_date" name="bill_date" required><br>
+
+        <label for="bill_amount">Bill Amount:</label>
+        <input type="number" id="bill_amount" name="bill_amount" required><br>
+
+        <label for="num_items">Number of rows:</label>
+        <input type="number" id="num_items" name="num_items" required><br>
+
+        <button type="button" onclick="generateItemRows()">Generate Item Rows</button>
+
+        <div id="item_rows">
+            <!-- Item rows will be dynamically generated here -->
+        </div>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        function generateItemRows() {
+            const numItems = document.getElementById('num_items').value;
+            const itemRows = document.getElementById('item_rows');
+            itemRows.innerHTML = ''; // Clear any existing rows
+
+            for (let i = 0; i < numItems; i++) {
+                const row = document.createElement('div');
+                row.innerHTML = `
+                    <h3>Item ${i + 1}</h3>
+                    <label for="item_name_${i}">Item Name:</label>
+                    <input type="text" id="item_name_${i}" name="item_name_${i}" required><br>
+
+                    <label for="item_type_${i}">Item Type:</label>
+                    <input type="text" id="item_type_${i}" name="item_type_${i}" required><br>
+
+                    <label for="quantity_${i}">Quantity:</label>
+                    <input type="number" id="quantity_${i}" name="quantity_${i}" required><br>
+
+                    <label for="warranty_period_${i}">Warranty Period:</label>
+                    <input type="text" id="warranty_period_${i}" name="warranty_period_${i}" required><br>
+                `;
+                itemRows.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>

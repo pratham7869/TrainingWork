@@ -9,6 +9,23 @@
 <body>
     <h2>Admin Dashboard</h2>
     <p>Welcome, Admin!</p>
-    <!-- Admin-specific content here -->
+
+    <!-- Functionality Links -->
+    <ul>
+        <li><a href="{{ url_for('add_bill') }}">Add New Bill</a></li>
+        <li><a href="{{ url_for('assign_items') }}">Assign Items</a></li>
+        <li><a href="{{ url_for('unassign_item') }}">Unassign Item</a></li>
+        <li><a href="{{ url_for('add_employee') }}">Add Employee</a></li>
+        <li><a href="{{ url_for('remove_employee') }}">Remove Employee</a></li>
+    </ul>
+
+    <!-- Dashboard Details -->
+    <div>
+        <p>Total Items: {{ total_items }}</p>
+        <p>Total Bills: {{ total_bills }}</p>
+        <p>Assigned Items: {{ assigned_items }}</p>
+        <p>Total Employees: {{ total_employees }}</p>
+        <p>Unassigned Items: {{ unassigned_items }}</p>
+    </div>
 </body>
 </html>

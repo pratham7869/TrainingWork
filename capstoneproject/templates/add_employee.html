@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Add Employee</h1>
+    <form method="POST" action="{{ url_for('add_employee') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.company_email.label }} {{ form.company_email(size=32) }}
+        </div>
+        <div>
+            {{ form.password.label }} {{ form.password(size=32) }}
+        </div>
+        <div>
+            {{ form.role.label }} {{ form.role() }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

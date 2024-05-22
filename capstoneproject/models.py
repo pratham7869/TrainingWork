@@ -36,7 +36,7 @@ class Item(Base):
 
     item_name = Column(String(255))
     item_id = Column(Integer, primary_key=True, autoincrement=True)
-    bill_number = Column(String(255))
+    bill_id = Column(Integer, ForeignKey('bill.bill_id'))
     item_type = Column(String(100))
     item_status = Column(String(50), default='unassigned')
     warranty_period = Column(String(50))

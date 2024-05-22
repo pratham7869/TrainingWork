@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Items</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Assign Items</h1>
+    <form method="POST" action="{{ url_for('assign_items') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.emp_id.label }} {{ form.emp_id(size=32) }}
+        </div>
+        <div>
+            {{ form.item_id.label }} {{ form.item_id(size=32) }}
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

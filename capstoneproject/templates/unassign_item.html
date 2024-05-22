@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unassign Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Unassign Item</h1>
+    <form method="POST" action="{{ url_for('unassign_item') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.item_id.label }} {{ form.item_id() }}
+        </div>
+        <div>
+            {{ form.find_item() }}
+        </div>
+        {% if item %}
+            <h2>Item Details</h2>
+            <p>Item ID: {{ item.item_id }}</p>
+            <p>Assigned to Employee ID: {{ item.emp_id }}</p>
+            <div>
+                {{ form.confirm_unassign() }}
+            </div>
+        {% endif %}
+    </form>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
