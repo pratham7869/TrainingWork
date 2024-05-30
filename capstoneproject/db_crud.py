@@ -1,5 +1,7 @@
 from sqlalchemy import func
-from models import User, Item, Bill, Assets, ValidId
+
+
+from models import *
 from database import get_session
 
 # CRUD operations
@@ -40,13 +42,6 @@ def create_asset(asset_data):
     session.commit()
     session.close()
 
-
-def create_valid_id(valid_id_data):
-    session = get_session()
-    new_valid_id = ValidId(**valid_id_data)
-    session.add(new_valid_id)
-    session.commit()
-    session.close()
 
 # Read........
 
@@ -100,20 +95,6 @@ def get_all_users():
     users = session.query(User).all()
     session.close()
     return users
-
-
-def get_valid_id(email):
-    session = get_session()
-    valid_id = session.query(ValidId).filter_by(company_email=email).first()
-    session.close()
-    return valid_id
-
-
-def get_valid_id_by_email(email):
-    session = get_session()
-    valid_id = session.query(ValidId).filter_by(company_email=email).first()
-    session.close()
-    return valid_id
 
 
 def get_user_by_email(email):
@@ -178,6 +159,52 @@ def get_asset_by_emp_item_id(emp_id, item_id):
     session.close()
     return asset
 
+
+def get_all_items():
+    session = get_session()
+    items = session.query(Item).all()
+    session.close()
+    return items
+
+
+def get_all_bills():
+    session = get_session()
+    bills = session.query(Bill).all()
+    session.close()
+    return bills
+
+
+def get_all_assigned_items():
+    session = get_session()
+    assigned_items = session.query(Item).filter_by(item_status='assigned').all()
+    session.close()
+    return assigned_items
+
+
+def get_all_total_employees():
+    session = get_session()
+    total_employees = session.query(User).all()
+    session.close()
+    return total_employees
+
+
+def get_all_unassigned_items():
+    session = get_session()
+    unassigned_items = session.query(Item).filter_by(item_status='unassigned').all()
+    session.close()
+    return unassigned_items
+
+
+def get_assigned_items_by_category(emp_id, category):
+    session = get_session()
+    assigned_items = session.query(Assets).join(Item, Assets.item_id == Item.item_id).filter(
+        Assets.emp_id == emp_id,
+        Item.item_type == category,
+        Assets.asset_status == 'assigned'
+    ).all()
+    session.close()
+    return assigned_items
+
 # Update.........
 
 
@@ -212,16 +239,6 @@ def update_item_status(item_id, status):
     session.close()
 
 
-def update_valid_id_status(email, status):
-    session = get_session()
-    valid_id = session.query(ValidId).filter_by(company_email=email).first()
-    if valid_id:
-        valid_id.register_status = status
-        session.commit()
-    session.close()
-    return valid_id
-
-
 def update_bill_number_of_items(bill_id, total_quantity):
     session = get_session()
     bill = session.query(Bill).get(bill_id)
@@ -242,12 +259,6 @@ def update_asset(item_id, update_data):
 
 # utility .......
 
-
-def check_valid_email(email, password):
-    session = get_session()
-    valid_entry = session.query(ValidId).filter_by(company_email=email, password=password).first()
-    session.close()
-    return valid_entry
 
 
 

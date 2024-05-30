@@ -3,56 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Add New Bill</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <h1>Add New Bill</h1>
-    <form method="POST" action="{{ url_for('add_bill') }}">
-        <label for="bill_number">Bill Number:</label>
-        <input type="text" id="bill_number" name="bill_number" required><br>
+<body class="form">
+  <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+  <header>
 
-        <label for="bill_date">Bill Date:</label>
-        <input type="date" id="bill_date" name="bill_date" required><br>
+    <h1 align="center">Add Items</h1>
+      </header>
+    <form method="POST" action="{{ url_for('add_bill') }}" class="form">
+        <table class="center-table">
+        <tr>
+        <td><label for="bill_number" class="formlabel">Bill Number:</label></td>
+        <td><input type="text" id="bill_number" name="bill_number" required></td>
+        </tr>
+        <tr>
+        <td><label for="bill_date">Bill Date:</label></td>
+        <td><input type="date" id="bill_date" name="bill_date" required></td>
+        </tr>
+        <tr>
+        <td><label for="bill_amount">Bill Amount:</label></td>
+        <td><input type="number" id="bill_amount" name="bill_amount" required></td>
+        </tr>
+        <tr>
+        <td><label for="num_items">Number of rows:</label></td>
+        <td><input type="number" id="num_items" name="num_items" required></td>
+        </tr>
+        <tr>
+        <td colspan="2" class="center-table">
+              <button type="button" onclick="generateItemRows()" class="button" >Generate Item Rows</button>
+        </td>
+        </tr>
+        </table>
 
-        <label for="bill_amount">Bill Amount:</label>
-        <input type="number" id="bill_amount" name="bill_amount" required><br>
 
-        <label for="num_items">Number of rows:</label>
-        <input type="number" id="num_items" name="num_items" required><br>
-
-        <button type="button" onclick="generateItemRows()">Generate Item Rows</button>
-
-        <div id="item_rows">
+        <table id="item_rows" class="center-table">
             <!-- Item rows will be dynamically generated here -->
-        </div>
+        </table>
 
-        <input type="submit" value="Submit">
+         <table id="item_rows2" class="center-table">
+            <!-- Item rows will be dynamically generated here -->
+        </table>
+
+
+
     </form>
 
     <script>
         function generateItemRows() {
             const numItems = document.getElementById('num_items').value;
             const itemRows = document.getElementById('item_rows');
+            const itemRows2 = document.getElementById('item_rows2');
             itemRows.innerHTML = ''; // Clear any existing rows
 
             for (let i = 0; i < numItems; i++) {
-                const row = document.createElement('div');
+                const row = document.createElement('tr');
                 row.innerHTML = `
-                    <h3>Item ${i + 1}</h3>
-                    <label for="item_name_${i}">Item Name:</label>
-                    <input type="text" id="item_name_${i}" name="item_name_${i}" required><br>
 
-                    <label for="item_type_${i}">Item Type:</label>
-                    <input type="text" id="item_type_${i}" name="item_type_${i}" required><br>
+                    <td for="item_name_${i}">Item Name:</td>
+                    <td><input type="text" id="item_name_${i}" name="item_name_${i}" required></td>
 
-                    <label for="quantity_${i}">Quantity:</label>
-                    <input type="number" id="quantity_${i}" name="quantity_${i}" required><br>
+                    <td for="item_type_${i}">Item Type:</td>
+                    <td><input type="text" id="item_type_${i}" name="item_type_${i}" required></td>
 
-                    <label for="warranty_period_${i}">Warranty Period:</label>
-                    <input type="text" id="warranty_period_${i}" name="warranty_period_${i}" required><br>
+                    <td for="quantity_${i}">Quantity:</td>
+                    <td><input type="number" id="quantity_${i}" name="quantity_${i}" required></td>
+
+                    <td for="warranty_period_${i}">Warranty Period:</td>
+                    <td><input type="text" id="warranty_period_${i}" name="warranty_period_${i}" required></td>
                 `;
                 itemRows.appendChild(row);
             }
+          const row = document.createElement('tr');
+                row.innerHTML = `
+                     <td colspan="8" class="center-table">
+                      <input type="submit" value="Submit" class="button">
+                     </td>
+                 `;
+                 itemRows2.appendChild(row);
         }
     </script>
 </body>

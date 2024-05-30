@@ -6,25 +6,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+<a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+    <header>
+
     <h1>Add Employee</h1>
+        </header>
     <form method="POST" action="{{ url_for('add_employee') }}">
         {{ form.hidden_tag() }}
-        <div>
+        <div class="center-table">
             {{ form.company_email.label }} {{ form.company_email(size=32) }}
         </div>
-        <div>
+        <div class="center-table">
             {{ form.password.label }} {{ form.password(size=32) }}
         </div>
-        <div>
+        <div class="center-table">
             {{ form.role.label }} {{ form.role() }}
         </div>
-        <div>
-            {{ form.submit() }}
+        <div >
+            <!-- {{ form.submit() }} -->
+            <input type="submit" value="Submit" class="button center-table">
         </div>
     </form>
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}
-    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
 </body>
 </html>

@@ -6,27 +6,46 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Unassign Item</h1>
+    <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+    <header>
+
+    <h1 align="center">Unassign Item</h1>
+    </header>
     <form method="POST" action="{{ url_for('unassign_item') }}">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.item_id.label }} {{ form.item_id() }}
-        </div>
-        <div>
-            {{ form.find_item() }}
-        </div>
-        {% if item %}
-            <h2>Item Details</h2>
-            <p>Item ID: {{ item.item_id }}</p>
-            <p>Assigned to Employee ID: {{ item.emp_id }}</p>
-            <div>
-                {{ form.confirm_unassign() }}
-            </div>
-        {% endif %}
+        <table class="center-table">
+            <tr>
+                <td>Item ID</td>
+                <td>
+                    <input type='text' name='item_id' list='itemname' required>
+                    <datalist id='itemname'>
+                        {% for item in all_item %}
+                            <option value="{{ item.item_id }}">{{ item.item_name }}</option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table" >
+                    <input type="submit" name="find_item" value="Find Item" class="button" align="center">
+                </td>
+            </tr>
+        </table>
     </form>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
+    {% if item %}
+        <h2 align="center">Item Details</h2>
+        <form method="POST" action="{{ url_for('unassign_item') }}">
+            {{ form.hidden_tag() }}
+            <p align="center">Item ID: {{ item.item_id }}</p>
+            <p align="center">Assigned to Employee ID: {{ item.emp_id }}</p>
+            <input type="hidden" name="item_id" value="{{ item.item_id }}">
+            <div >
+                <input type="submit" name="confirm_unassign" align="center" value="Unassign Item" class="button"  >
+            </div>
+        </form>
     {% endif %}
-    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    {% if error %}
+        <p style="color: red;" align="center">{{ error }}</p>
+    {% endif %}
 </body>
 </html>

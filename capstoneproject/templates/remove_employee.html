@@ -6,28 +6,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Remove Employee</h1>
+<a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+<header>
+
+    <h1 align="center">Remove Employee</h1>
+    </header>
     <form method="POST" action="{{ url_for('remove_employee') }}">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.emp_id.label }} {{ form.emp_id() }}
-        </div>
-        <div>
-            {{ form.find_employee() }}
-        </div>
-        {% if user %}
-            <h2>Employee Details</h2>
-            <p>ID: {{ user.user_id }}</p>
-            <p>Name: {{ user.name }}</p>
-            <p>Department: {{ user.department }}</p>
-            <div>
-                {{ form.confirm_remove() }}
-            </div>
-        {% endif %}
+        <table class="center-table">
+            <tr>
+                <td>{{ form.emp_id.label }}</td>
+                <td>
+                    <input type="text" name="emp_id" list="empname" required>
+                    <datalist id="empname">
+                        {% for emp in all_emp %}
+                            <option value="{{ emp.user_id }}">{{ emp.name }}</option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">
+                    <input type="submit" name="find_employee" value="Find Employee" class="button">
+                </td>
+            </tr>
+        </table>
     </form>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
+    {% if user %}
+        <h2 align="center">Employee Details</h2>
+        <form method="POST" action="{{ url_for('remove_employee') }}">
+            {{ form.hidden_tag() }}
+            <p align="center">ID: {{ user.user_id }}</p>
+            <p align="center">Name: {{ user.name }}</p>
+            <input type="hidden" name="emp_id" value="{{ user.user_id }}">
+            <table class="center-table">
+                <tr>
+                <td><input type="submit" name="confirm_remove" value="Confirm Remove" class="button"> </td>
+                </tr>
+            </table>
+        </form>
     {% endif %}
-    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    {% if error %}
+        <p style="color: red;" align="center">{{ error }}</p>
+    {% endif %}
+    {% if message %}
+        <p style="color: green;" align="center">{{ message }}</p>
+    {% endif %}
 </body>
 </html>

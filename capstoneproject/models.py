@@ -9,14 +9,9 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255))
     mobile_no = Column(String(20))
-    dob = Column(Date)
-    department = Column(String(100))
     email = Column(String(255))
     role = Column(String(50))
     password = Column(String(255))
-    security_question = Column(String(255))
-    security_answer = Column(String(255))
-    prev_password = Column(String(255))
     user_status = Column(String(50), default='active')
 
 
@@ -50,16 +45,6 @@ class Bill(Base):
     bill_id = Column(Integer, primary_key=True, autoincrement=True)
     no_of_items = Column(Integer)
     bill_date = Column(Date)
-    admin_id = Column(Integer, ForeignKey('user.user_id'))
-
-
-class ValidId(Base):
-    __tablename__ = 'validid'
-
-    company_email = Column(String(255), primary_key=True)
-    role = Column(String(50))
-    register_status = Column(String(50), default='unregistered')
-    password = Column(String(255))
     admin_id = Column(Integer, ForeignKey('user.user_id'))
 
 

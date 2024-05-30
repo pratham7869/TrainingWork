@@ -7,25 +7,43 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-   <h1>Welcome, {{ user.name }}</h1>
-        <a href="{{ url_for('logout') }}">Logout</a>
+<a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    <header>
+        <h1>Welcome, {{ user.name }}</h1>
 
-    <!-- Functionality Links -->
-    <ul>
-        <li><a href="{{ url_for('add_bill') }}">Add New Bill</a></li>
-        <li><a href="{{ url_for('assign_items') }}">Assign Items</a></li>
-        <li><a href="{{ url_for('unassign_item') }}">Unassign Item</a></li>
-        <li><a href="{{ url_for('add_employee') }}">Add Employee</a></li>
-        <li><a href="{{ url_for('remove_employee') }}">Remove Employee</a></li>
-    </ul>
-
-    <!-- Dashboard Details -->
-    <div>
-        <p>Total Items: {{ total_items }}</p>
-        <p>Total Bills: {{ total_bills }}</p>
-        <p>Assigned Items: {{ assigned_items }}</p>
-        <p>Total Employees: {{ total_employees }}</p>
-        <p>Unassigned Items: {{ unassigned_items }}</p>
+    </header>
+    <div class="function-bar">
+        <a href="{{ url_for('add_bill') }}" class="button">Add Items</a>
+        <a href="{{ url_for('assign_items') }}" class="button">Assign Items</a>
+        <a href="{{ url_for('unassign_item') }}" class="button">Unassign Item</a>
+        <a href="{{ url_for('register') }}" class="button">Add Employee</a>
+        <a href="{{ url_for('remove_employee') }}" class="button">Remove Employee</a>
+    </div>
+    <div class="dashboard">
+        <div class="row">
+            <a href="{{ url_for('total_items') }}" class="stat-box">
+                <h2>Total Items</h2>
+                <p>{{ total_items }}</p>
+            </a>
+            <a href="{{ url_for('total_bills') }}" class="stat-box">
+                <h2>Total Bills</h2>
+                <p>{{ total_bills }}</p>
+            </a>
+            <a href="{{ url_for('all_assigned_items') }}" class="stat-box">
+                <h2>Assigned Items</h2>
+                <p>{{ assigned_items }}</p>
+            </a>
+        </div>
+        <div class="row">
+            <a href="{{ url_for('total_employees') }}" class="stat-box">
+                <h2>Total Employees</h2>
+                <p>{{ total_employees }}</p>
+            </a>
+            <a href="{{ url_for('all_unassigned_items') }}" class="stat-box">
+                <h2>Unassigned Items</h2>
+                <p>{{ unassigned_items }}</p>
+            </a>
+        </div>
     </div>
 </body>
 </html>

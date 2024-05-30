@@ -4,51 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <h2>Register</h2>
-    <form method="POST" action="{{ url_for('register') }}">
+<body style="text-align: center;">
+    <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+    <header>
+        <h2>Register</h2>
+    </header>
+    <form method="POST" action="{{ url_for('register') }}" onsubmit="return validateEmail()">
         {{ form.hidden_tag() }}
-
-        <p>Email: {{ email }}</p>
-        <p>Role: {{ role }}</p>
-
-        <div>
-            {{ form.name.label }}<br>
-            {{ form.name(size=32) }}
-        </div>
-        <div>
-            {{ form.mobile_no.label }}<br>
-            {{ form.mobile_no(size=32) }}
-        </div>
-        <div>
-            {{ form.dob.label }}<br>
-            {{ form.dob() }}
-        </div>
-        <div>
-            {{ form.department.label }}<br>
-            {{ form.department(size=32) }}
-        </div>
-        <div>
-            {{ form.new_password.label }}<br>
-            {{ form.new_password(size=32) }}
-        </div>
-        <div>
-            {{ form.confirm_password.label }}<br>
-            {{ form.confirm_password(size=32) }}
-        </div>
-        <div>
-            {{ form.security_question.label }}<br>
-            {{ form.security_question() }}
-        </div>
-        <div>
-            {{ form.security_answer.label }}<br>
-            {{ form.security_answer(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
+        <table class="center-table">
+            <tr>
+                <td>{{ form.name.label }}</td>
+                <td>{{ form.name(size=32) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.mobile_no.label }}</td>
+                <td>{{ form.mobile_no(size=32) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.email.label }}</td>
+                <td>{{ form.email(size=32) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.new_password.label }}</td>
+                <td>{{ form.new_password(size=32) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.confirm_password.label }}</td>
+                <td>{{ form.confirm_password(size=32) }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.Role.label }}</td>
+                <td>{{ form.Role() }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">
+                    <input type="submit" value="Register" class="button center-table">
+                </td>
+            </tr>
+        </table>
     </form>
+    <p id="error-message" style="color: red;"></p>
+    {% for field, errors in form.errors.items() %}
+        {% for error in errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    {% endfor %}
+    <script>
+        function validateEmail() {
+            const emailField = document.querySelector('[name="email"]');
+            const errorMessage = document.getElementById('error-message');
+            const email = emailField.value;
+            const domain = email.substring(email.lastIndexOf('@') + 1);
+
+            if (domain !== 'nucleusteq.com') {
+                errorMessage.textContent = 'Email must be a company email (e.g., pratham@nucleusteq.com).';
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

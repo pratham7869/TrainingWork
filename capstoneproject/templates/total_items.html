@@ -1,27 +1,28 @@
-<!-- templates/show_added_items.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Added Items</title>
+    <title>Total Items</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
- <a href="{{ url_for('add_bill') }}" class="logout">Back to Add Items</a>
-     <header>
-      <h1>Items for Bill ID: {{ bill_id }}</h1>
-     </header>
-    <table>
-        <thead>
+<a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+<header>
+
+        <h1 align="center">All Items</h1>
+    </header>
+        <table class="center-table">
+            <thead>
             <tr>
                 <th>Item ID</th>
                 <th>Item Name</th>
                 <th>Item Type</th>
                 <th>Item Status</th>
-                <th>Warranty Period</th>
+                <th>Warranty Period<br>(In years)</th>
+                <!-- Add more table headings as needed -->
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for item in items %}
             <tr>
                 <td>{{ item.item_id }}</td>
@@ -29,10 +30,13 @@
                 <td>{{ item.item_type }}</td>
                 <td>{{ item.item_status }}</td>
                 <td>{{ item.warranty_period }}</td>
+                <!-- Add more table cells as needed -->
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
-<button onclick="window.location.href='{{ url_for('admin_dashboard') }}'">Back to Dashboard</button>
+            </tbody>
+        </table>
+
+
+
 </body>
 </html>

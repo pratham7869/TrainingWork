@@ -1,28 +1,30 @@
-<!-- templates/show_added_items.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Added Items</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigned Items</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
- <a href="{{ url_for('add_bill') }}" class="logout">Back to Add Items</a>
-     <header>
-      <h1>Items for Bill ID: {{ bill_id }}</h1>
-     </header>
-    <table>
+<a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+<header>
+
+    <h1 align="center">Assigned Items</h1>
+    </header>
+    <table class="center-table">
         <thead>
             <tr>
-                <th>Item ID</th>
+                <th>Item Id</th>
                 <th>Item Name</th>
-                <th>Item Type</th>
+                <th>Item type</th>
                 <th>Item Status</th>
-                <th>Warranty Period</th>
+                <th>Warranty Period<br>(In years)</th>
+
             </tr>
         </thead>
         <tbody>
-            {% for item in items %}
+            {% for item in assigned_items %}
             <tr>
                 <td>{{ item.item_id }}</td>
                 <td>{{ item.item_name }}</td>
@@ -33,6 +35,5 @@
             {% endfor %}
         </tbody>
     </table>
-<button onclick="window.location.href='{{ url_for('admin_dashboard') }}'">Back to Dashboard</button>
 </body>
 </html>

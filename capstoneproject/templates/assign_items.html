@@ -4,24 +4,48 @@
     <meta charset="UTF-8">
     <title>Assign Items</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+     <script src="{{ url_for('static', filename='disable_navigation.js') }}"></script>
 </head>
 <body>
-    <h1>Assign Items</h1>
-    <form method="POST" action="{{ url_for('assign_items') }}">
+ <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+<header>
+
+    <h1 align="center">Assign Items</h1>
+    </header>
+    <form method="POST" action="{{ url_for('assign_items') }}" class="form">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.emp_id.label }} {{ form.emp_id(size=32) }}
-        </div>
-        <div>
-            {{ form.item_id.label }} {{ form.item_id(size=32) }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
+        <table class="center-table">
+            <tr>
+                <td>User ID:</td>
+                <td>
+                    <input type='text' name='emp_id' list='empname' required>
+                    <datalist id='empname'>
+                        {% for emp in all_user %}
+                            <option value="{{ emp.user_id }}">{{ emp.name }}</option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td>Item ID:</td>
+                <td>
+                    <input type='text' name='item_id' list='itemname' required>
+                    <datalist id='itemname'>
+                        {% for item in all_item %}
+                            <option value="{{ item.item_id }}">{{ item.item_name }}</option>
+                        {% endfor %}
+                    </datalist>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">
+                    <input type="submit" value="Submit" class="button">
+                </td>
+            </tr>
+        </table>
     </form>
     {% if message %}
-        <p>{{ message }}</p>
+        <p align="center">{{ message }}</p>
     {% endif %}
-    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
 </body>
 </html>

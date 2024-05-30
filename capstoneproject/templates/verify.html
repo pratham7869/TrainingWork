@@ -26,7 +26,10 @@
           <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
       </p>
-      <p>{{ form.submit() }}</p>
+      <p>
+        <!-- {{ form.submit() }} -->
+        <input type="submit" value="verify" class="button center-table">
+      </p>
     </form>
   </body>
 </html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Employees</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+ <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+<header>
+
+    <h1 align="center">Employees List</h1>
+    </header>
+    <table class="center-table">
+        <thead>
+            <tr>
+                <th>Employee Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Mobile number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in total_employees %}
+            <tr>
+                <td>{{ emp.user_id }}</td>
+                <td>{{ emp.name }}</td>
+                <td>{{ emp.email }}</td>
+                <td>{{ emp.role }}</td>
+                <td>{{ emp.mobile_no }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

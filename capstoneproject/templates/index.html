@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index Page</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-<center>
-    <h1>Welcome to the Inventory Management System</h1>
-
-    <a href="/verify"><button class="button">register</button></a>
-    <a href="/login"><button class="button">login</button></a>
-
-</center>
+    <header>
+        <h1>Welcome to the Inventory Management System</h1>
+    </header>
+    <table class="center-table">
+        <tr><td> <a href="{{ url_for('login') }}" class="button"  >Login</a> </td> </tr>
+    </table>
 </body>
 </html>
