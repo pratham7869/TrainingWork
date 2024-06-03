@@ -27,7 +27,7 @@
         </tr>
         <tr>
         <td><label for="num_items">Number of rows:</label></td>
-        <td><input type="number" id="num_items" name="num_items" required></td>
+        <td><input type="number" id="num_items" name="num_items" max="15" required></td>
         </tr>
         <tr>
         <td colspan="2" class="center-table">
@@ -55,6 +55,10 @@
             const itemRows = document.getElementById('item_rows');
             const itemRows2 = document.getElementById('item_rows2');
             itemRows.innerHTML = ''; // Clear any existing rows
+            if (numItems > 15) {
+                alert("Number of rows cannot exceed 15.");
+                return;
+            }
 
             for (let i = 0; i < numItems; i++) {
                 const row = document.createElement('tr');
@@ -74,14 +78,43 @@
                 `;
                 itemRows.appendChild(row);
             }
-          const row = document.createElement('tr');
-                row.innerHTML = `
-                     <td colspan="8" class="center-table">
-                      <input type="submit" value="Submit" class="button">
-                     </td>
-                 `;
-                 itemRows2.appendChild(row);
+            const rows = itemRows2.getElementsByTagName('tr');
+            if (rows.length === 0)
+            {
+            // If no rows exist, create and append the new row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td colspan="8" class="center-table">
+                    <input type="submit" value="Submit" class="button">
+                </td>
+            `;
+            itemRows2.appendChild(row);
+            }
+
         }
+        function validateForm() {
+            const billDateInput = document.getElementById('bill_date');
+            const billDate = new Date(billDateInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (billDate > today) {
+                alert("Bill date cannot be in the future.");
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById('bill_date').addEventListener('change', function() {
+            const billDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (billDate > today) {
+                alert("Bill date cannot be in the future.");
+                this.value = '';
+            }
+        });
     </script>
 </body>
 </html>

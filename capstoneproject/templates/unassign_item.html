@@ -39,9 +39,11 @@
             <p align="center">Item ID: {{ item.item_id }}</p>
             <p align="center">Assigned to Employee ID: {{ item.emp_id }}</p>
             <input type="hidden" name="item_id" value="{{ item.item_id }}">
-            <div >
-                <input type="submit" name="confirm_unassign" align="center" value="Unassign Item" class="button"  >
-            </div>
+            <table class="center-table">
+                <tr>
+               <td> <input type="submit" name="confirm_unassign" align="center" value="Unassign Item" class="button"> </td>
+                </tr>
+            </table>
         </form>
     {% endif %}
     {% if error %}

@@ -1,0 +1,25 @@
+2024-06-03 19:49:10,933 - app_logger - DEBUG - user fetched with data: pratham joya
+2024-06-03 19:49:11,995 - app_logger - DEBUG - assign_items page accessed
+2024-06-03 19:49:11,995 - app_logger - DEBUG - assign_items page accessed
+2024-06-03 19:49:12,001 - app_logger - DEBUG - all user data is fetched..
+2024-06-03 19:49:12,001 - app_logger - DEBUG - all user data is fetched..
+2024-06-03 19:49:12,009 - app_logger - DEBUG - all unassigned_items data is fetched..
+2024-06-03 19:49:12,009 - app_logger - DEBUG - all unassigned_items data is fetched..
+2024-06-03 19:51:04,710 - app_logger - DEBUG - assign_items page accessed
+2024-06-03 19:51:04,710 - app_logger - DEBUG - assign_items page accessed
+2024-06-03 19:51:04,729 - app_logger - DEBUG - all user data is fetched..
+2024-06-03 19:51:04,729 - app_logger - DEBUG - all user data is fetched..
+2024-06-03 19:51:04,736 - app_logger - DEBUG - all unassigned_items data is fetched..
+2024-06-03 19:51:04,736 - app_logger - DEBUG - all unassigned_items data is fetched..
+2024-06-03 19:53:24,062 - app_logger - DEBUG - admin_dashboard page accessed
+2024-06-03 19:53:24,062 - app_logger - DEBUG - admin_dashboard page accessed
+2024-06-03 19:53:24,085 - app_logger - DEBUG - all item data is fetched..
+2024-06-03 19:53:24,085 - app_logger - DEBUG - all item data is fetched..
+2024-06-03 19:53:24,089 - app_logger - DEBUG - all bills data is fetched..
+2024-06-03 19:53:24,089 - app_logger - DEBUG - all bills data is fetched..
+2024-06-03 19:53:24,096 - app_logger - DEBUG - all assigned_item data is fetched..
+2024-06-03 19:53:24,096 - app_logger - DEBUG - all assigned_item data is fetched..
+2024-06-03 19:53:24,101 - app_logger - DEBUG - all employees data is fetched..
+2024-06-03 19:53:24,101 - app_logger - DEBUG - all employees data is fetched..
+2024-06-03 19:53:24,105 - app_logger - DEBUG - all unassigned_item data is fetched..
+2024-06-03 19:53:24,105 - app_logger - DEBUG - all unassigned_item data is fetched..

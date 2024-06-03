@@ -2,14 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from datetime import date
 from db_crud import *
 from forms import *
+from logging_config import setup_logging
 import datetime
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+logger = setup_logging()
 
 
 @app.route('/')
 def index():
+    logger.debug('Home page accessed')
     return render_template('index.html')  # Render the index page template
 
 
@@ -35,6 +38,7 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    logger.debug('add employee page accessed')
     form = RegistrationForm()
     error = None
 
@@ -47,7 +51,7 @@ def register():
             'password': form.new_password.data,
         }
         create_user(user_data)
-        error = form.name.data +' is registered successfully...'
+        error = form.name.data + ' is registered successfully...'
         return render_template('register.html', form=form, error=error)
 
     return render_template('register.html', form=form, error=error)
@@ -55,6 +59,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    logger.debug('login page accessed')
     form = LoginForm()
     error = None
     if form.validate_on_submit():
@@ -77,12 +82,14 @@ def login():
 
 @app.route('/logout')
 def logout():
+    logger.debug('logut page accessed')
     session.clear()
     return redirect(url_for('login'))
 
 
 @app.route('/employee_dashboard')
 def employee_dashboard():
+    logger.debug('employee_dashboard page accessed')
     if 'user_id' not in session or session.get('role') != 'employee':
         return redirect(url_for('login'))
 
@@ -95,6 +102,7 @@ def employee_dashboard():
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
+    logger.debug('admin_dashboard page accessed')
     total_items = get_total_items()
     total_bills = get_total_bills()
     assigned_items = get_assigned_items()
@@ -113,6 +121,7 @@ def admin_dashboard():
 
 @app.route('/add_bill', methods=['GET', 'POST'])
 def add_bill():
+    logger.debug('add_items page accessed')
     if session.get('role') != 'admin':
         return redirect(url_for('login'))
 
@@ -138,9 +147,9 @@ def add_bill():
             'admin_id': session['user_id']
         }
 
-        new_bill = create_bill(bill_data)
+        bill_id = create_bill(bill_data)
 
-        bill_id = get_bill_id_by_number(bill_number)
+         # = get_bill_id_by_number(bill_number)
 
         for i in range(num_items):
             item_name = request.form[f'item_name_{i}']
@@ -169,12 +178,14 @@ def add_bill():
 
 @app.route('/total_items', methods=['GET'])
 def total_items():
+    logger.debug('total_items page accessed')
     items = get_all_items()  # Function to fetch all items from the database
     return render_template('total_items.html', items=items)
 
 
 @app.route('/total_bills')
 def total_bills():
+    logger.debug('Total_bills page accessed')
     if 'user_id' not in session:  # Check if user is logged in
         return redirect(url_for('login'))
 
@@ -186,6 +197,7 @@ def total_bills():
 
 @app.route('/assigned_items')
 def all_assigned_items():
+    logger.debug('assigned_items page accessed')
     if 'user_id' not in session:  # Check if user is logged in
         return redirect(url_for('login'))
 
@@ -196,6 +208,7 @@ def all_assigned_items():
 
 @app.route('/total_employees')
 def total_employees():
+    logger.debug('total_employees page accessed')
     if 'user_id' not in session:  # Check if user is logged in
         return redirect(url_for('login'))
 
@@ -206,6 +219,7 @@ def total_employees():
 
 @app.route('/unassigned_items')
 def all_unassigned_items():
+    logger.debug('unassigned_items page accessed')
     if 'user_id' not in session:  # Check if user is logged in
         return redirect(url_for('login'))
 
@@ -225,6 +239,7 @@ def update_bill_item_count(bill_id, count):
 
 @app.route('/show_added_items')
 def show_added_items():
+    logger.debug('added_items page accessed')
     bill_id = session.get('bill_id')
     if not bill_id:
         return redirect(url_for('admin_dashboard'))
@@ -234,6 +249,7 @@ def show_added_items():
 
 @app.route('/assign_items', methods=['GET', 'POST'])
 def assign_items():
+    logger.debug('assign_items page accessed')
     if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
@@ -296,6 +312,7 @@ def assign_items():
 
 @app.route('/unassign_item', methods=['GET', 'POST'])
 def unassign_item():
+    logger.debug('unassign_items page accessed')
     if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
@@ -352,6 +369,7 @@ def unassign_item():
 
 @app.route('/remove_employee', methods=['GET', 'POST'])
 def remove_employee():
+    logger.debug('remove_employee page accessed')
     if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
@@ -373,7 +391,8 @@ def remove_employee():
             if not user_details:
                 error = 'Employee not found.'
 
-    return render_template('remove_employee.html', form=form, user=user_details, error=error, message=message, all_emp=all_emp)
+    return render_template('remove_employee.html', form=form, user=user_details, error=error, message=message,
+                           all_emp=all_emp)
 
 
 if __name__ == '__main__':

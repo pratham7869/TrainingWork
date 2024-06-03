@@ -45,19 +45,16 @@
             </tr>
         </table>
     </form>
-    <p id="error-message" style="color: red;"></p>
-    {% for field, errors in form.errors.items() %}
-        {% for error in errors %}
-            <p style="color: red;">{{ error }}</p>
-        {% endfor %}
-    {% endfor %}
+   {% if error %}
+        <p style="color: red;" align="center" id="error-message">{{ error }}</p>
+    {% endif %}
     <script>
         function validateEmail() {
             const emailField = document.querySelector('[name="email"]');
             const errorMessage = document.getElementById('error-message');
             const email = emailField.value;
             const domain = email.substring(email.lastIndexOf('@') + 1);
-
+            errorMessage.textContent = domain;
             if (domain !== 'nucleusteq.com') {
                 errorMessage.textContent = 'Email must be a company email (e.g., pratham@nucleusteq.com).';
                 return false;

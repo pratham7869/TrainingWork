@@ -16,9 +16,9 @@
             <h2 align="center">Your Assets</h2>
             {% if assigned_items %}
                 <table class="center-table">
-                     <tr><td>Item Id </td> <td> Item Name</td></tr>
+                     <tr><td>Item Id </td> <td> Item Name</td> <td>Item Type </td> <td> Warranty period <br>  (In years)</td></tr>
                     {% for item in assigned_items %}
-                        <tr><td> {{ item.item_id }}  </td> <td> {{ item.item_name }}</td></tr>
+                        <tr><td> {{ item.item_id }}  </td> <td> {{ item.item_name }}</td> <td> {{ item.item_type }}  </td> <td> {{ item.warranty_period }}  </td></tr>
                     {% endfor %}
                 </table>
             {% else %}
