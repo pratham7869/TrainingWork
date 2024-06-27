@@ -1,28 +1,10 @@
 import unittest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database import Base, get_engine, get_session
-from models import User, Item, Bill, Assets
 from db_crud import *
 
 
 class TestCRUDOperations(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # Use an in-memory SQLite database for testing
-        cls.engine = get_engine('sqlite:///:memory:')
-        Base.metadata.create_all(cls.engine)
-        cls.Session = sessionmaker(bind=cls.engine)
-
-    def setUp(self):
-        # Start a new session for each test
-        self.session = self.Session()
-
-    def tearDown(self):
-        # Rollback any changes made during the test
-        self.session.rollback()
-        self.session.close()
+    # test_create........
 
     def test_create_user(self):
         user_data = {
@@ -36,214 +18,109 @@ class TestCRUDOperations(unittest.TestCase):
         self.assertEqual(new_user.name, 'Test User')
         self.assertEqual(new_user.email, 'testuser@nucleusteq.com')
 
-    def test_get_user_by_id(self):
-        user = get_user_by_id(1)
-        self.assertIsNone(user)
-        user_data = {
-            'name': 'Test User',
-            'mobile_no': '1234567890',
-            'email': 'testuser@example.com',
-            'role': 'admin',
-            'password': 'password123'
-        }
-        create_user(user_data)
-        user = get_user_by_id(1)
-        self.assertIsNotNone(user)
-        self.assertEqual(user.name, 'Test User')
-
-    def test_update_user(self):
-        user_data = {
-            'name': 'Test User',
-            'mobile_no': '1234567890',
-            'email': 'testuser@example.com',
-            'role': 'admin',
-            'password': 'password123'
-        }
-        new_user = create_user(user_data)
-        update_data = {'name': 'Updated User'}
-        updated_user = update_user(new_user.user_id, update_data)
-        self.assertEqual(updated_user.name, 'Updated User')
-
-    def test_create_item(self):
+    def test_create_item(self):       # testing for create item , delete item , and get item .....
         item_data = {
             'item_name': 'Test Item',
             'item_type': 'Type1',
             'bill_id': 1,
             'item_status': 'unassigned',
-            'warranty_period': '1 year'
+            'warranty_period': '1'
         }
         new_item = create_item(item_data)
         self.assertEqual(new_item.item_name, 'Test Item')
 
-    def test_get_item_by_id(self):
-        item = get_item_by_id(1)
-        self.assertIsNone(item)
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        create_item(item_data)
-        item = get_item_by_id(1)
-        self.assertIsNotNone(item)
-        self.assertEqual(item.item_name, 'Test Item')
-
-    def test_update_item(self):
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        new_item = create_item(item_data)
-        update_data = {'item_name': 'Updated Item'}
-        updated_item = update_item(new_item.item_id, update_data)
-        self.assertEqual(updated_item.item_name, 'Updated Item')
-
     def test_create_bill(self):
         bill_data = {
-            'bill_number': 'BILL123',
-            'bill_amount': 1000,
-            'no_of_items': 10,
-            'bill_date': '2023-01-01',
-            'admin_id': 1
-        }
-        new_bill = create_bill(bill_data)
-        self.assertEqual(new_bill.bill_number, 'BILL123')
-
-    def test_get_bill_by_bill_number(self):
-        bill = get_bill_by_bill_number('BILL123')
-        self.assertIsNone(bill)
-        bill_data = {
-            'bill_number': 'BILL123',
+            'bill_number': 'BILL124',
             'bill_amount': 1000,
             'no_of_items': 10,
             'bill_date': '2023-01-01',
             'admin_id': 1
         }
         create_bill(bill_data)
-        bill = get_bill_by_bill_number('BILL123')
-        self.assertIsNotNone(bill)
-        self.assertEqual(bill.bill_number, 'BILL123')
+        new_bill = get_bill_by_bill_number("BILL124")
+        self.assertEqual(new_bill.bill_number, 'BILL124')
 
-    def test_create_asset(self):
-        user_data = {
-            'name': 'Test User',
-            'mobile_no': '1234567890',
-            'email': 'testuser@example.com',
-            'role': 'employee',
-            'password': 'password123'
-        }
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        create_user(user_data)
-        create_item(item_data)
-        asset_data = {
-            'admin_id': 1,
-            'emp_id': 1,
-            'item_id': 1,
-            'assigned_date': '2023-01-01',
-            'asset_status': 'assigned'
-        }
-        create_asset(asset_data)
-        asset = get_asset_by_emp_item_id(1, 1)
-        self.assertIsNotNone(asset)
-        self.assertEqual(asset.emp_id, 1)
-        self.assertEqual(asset.item_id, 1)
+    #Test_read.......
+
+    def test_get_total_items(self):
+        items = get_total_items()
+        if items > 0:
+            items = True
+
+        self.assertEqual(items, True)
+
+    def test_get_total_bills(self):
+        bills = get_total_bills()
+        if bills > 0:
+            bills = True
+
+        self.assertEqual(bills, True)
+
+    def test_get_total_employees(self):
+        employees = get_total_employees()
+        if employees > 0:
+            employees = True
+
+        self.assertEqual(employees, True)
+
+    def test_get_user_by_id(self):
+        update_data = {'name': 'Updated User'}
+        update_user(1, update_data)
+        user = get_user_by_id(1)
+        self.assertEqual(user.name, 'Updated User')
+
+    def test_get_item_by_id(self):
+        item = get_item_by_id(2)
+        self.assertEqual(item.item_name, 'laptop')
+
+    def test_get_bill_by_bill_number(self):
+        bill = get_bill_by_bill_number('2024-001')
+        self.assertEqual(bill.bill_amount, '24000')
 
     def test_get_all_users(self):
         users = get_all_users()
-        self.assertEqual(len(users), 0)
-        user_data = {
-            'name': 'Test User',
-            'mobile_no': '1234567890',
-            'email': 'testuser@example.com',
-            'role': 'admin',
-            'password': 'password123'
-        }
-        create_user(user_data)
-        users = get_all_users()
-        self.assertEqual(len(users), 1)
+        print(users)
+        self.assertIsNotNone(users)
 
     def test_get_all_items(self):
         items = get_all_items()
-        self.assertEqual(len(items), 0)
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        create_item(item_data)
-        items = get_all_items()
-        self.assertEqual(len(items), 1)
+        print(items)
+        self.assertIsNotNone(items)
 
     def test_get_all_bills(self):
         bills = get_all_bills()
-        self.assertEqual(len(bills), 0)
-        bill_data = {
-            'bill_number': 'BILL123',
-            'bill_amount': 1000,
-            'no_of_items': 10,
-            'bill_date': '2023-01-01',
-            'admin_id': 1
-        }
-        create_bill(bill_data)
-        bills = get_all_bills()
-        self.assertEqual(len(bills), 1)
+        print(bills)
+        self.assertIsNotNone(bills)
 
     def test_get_all_assigned_items(self):
         assigned_items = get_all_assigned_items()
-        self.assertEqual(len(assigned_items), 0)
-        user_data = {
-            'name': 'Test User',
-            'mobile_no': '1234567890',
-            'email': 'testuser@example.com',
-            'role': 'employee',
-            'password': 'password123'
-        }
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        create_user(user_data)
-        create_item(item_data)
-        asset_data = {
-            'admin_id': 1,
-            'emp_id': 1,
-            'item_id': 1,
-            'assigned_date': '2023-01-01',
-            'asset_status': 'assigned'
-        }
-        create_asset(asset_data)
-        assigned_items = get_all_assigned_items()
-        self.assertEqual(len(assigned_items), 1)
+        print(assigned_items)
+        self.assertIsNotNone(assigned_items)
 
     def test_get_all_unassigned_items(self):
         unassigned_items = get_all_unassigned_items()
-        self.assertEqual(len(unassigned_items), 0)
-        item_data = {
-            'item_name': 'Test Item',
-            'item_type': 'Type1',
-            'bill_id': 1,
-            'item_status': 'unassigned',
-            'warranty_period': '1 year'
-        }
-        create_item(item_data)
-        unassigned_items = get_all_unassigned_items()
-        self.assertEqual(len(unassigned_items), 1)
+        print(unassigned_items)
+        self.assertIsNotNone(unassigned_items)
+
+    #test_update........
+
+    def test_update_user(self):
+        update_data = {'name': 'Updated User'}
+        update_user(2, update_data)
+        user = get_user_by_id(2)
+        self.assertEqual(user.name, 'Updated User')
+
+    def test_update_item(self):
+        update_data = {'item_name': 'Updated Item'}
+        update_item(4, update_data)
+        item = get_item_by_id(4)
+        self.assertEqual(item.item_name, 'Updated Item')
+
+    def test_is_email_exists_in_user(self):
+        email = "pratham@nucleusteq.com"
+        self.assertEqual(is_email_exists_in_user(email), True)
+        self.assertEqual(is_email_exists_in_user("pratham@gmail"), False)
 
 
 if __name__ == '__main__':

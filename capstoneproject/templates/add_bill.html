@@ -6,105 +6,149 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="form">
-  <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
-  <header>
-
-    <h1 align="center">Add Items</h1>
-      </header>
-    <form method="POST" action="{{ url_for('add_bill') }}" class="form">
+    <a href="{{ url_for('admin_dashboard') }}" class="logout">Back to Dashboard</a>
+    <header>
+        <h1 align="center">Add Items</h1>
+    </header>
+    <form method="POST" action="{{ url_for('add_bill') }}" class="form" onsubmit="return validateForm()">
+        {{ form.hidden_tag() }}
         <table class="center-table">
-        <tr>
-        <td><label for="bill_number" class="formlabel">Bill Number:</label></td>
-        <td><input type="text" id="bill_number" name="bill_number" required></td>
-        </tr>
-        <tr>
-        <td><label for="bill_date">Bill Date:</label></td>
-        <td><input type="date" id="bill_date" name="bill_date" required></td>
-        </tr>
-        <tr>
-        <td><label for="bill_amount">Bill Amount:</label></td>
-        <td><input type="number" id="bill_amount" name="bill_amount" required></td>
-        </tr>
-        <tr>
-        <td><label for="num_items">Number of rows:</label></td>
-        <td><input type="number" id="num_items" name="num_items" max="15" required></td>
-        </tr>
-        <tr>
-        <td colspan="2" class="center-table">
-              <button type="button" onclick="generateItemRows()" class="button" >Generate Item Rows</button>
-        </td>
-        </tr>
+            <tr>
+                <td><label for="bill_number" class="formlabel">Bill Number:</label></td>
+                <td><input type="text" id="bill_number" name="bill_number" required></td>
+                <td><span id="bill_number_error" style="color: red;"></span></td>
+            </tr>
+            <tr>
+                <td><label for="bill_date">Bill Date:</label></td>
+                <td><input type="date" id="bill_date" name="bill_date" required></td>
+                <td><span id="bill_date_error" style="color: red;"></span></td>
+            </tr>
+            <tr>
+                <td><label for="bill_amount">Bill Amount:</label></td>
+                <td><input type="number" id="bill_amount" name="bill_amount" required></td>
+                <td><span id="bill_amount_error" style="color: red;"></span></td>
+            </tr>
+            <tr>
+                <td><label for="num_items">Number of rows:</label></td>
+                <td><input type="number" id="num_items" name="num_items" max="15" required></td>
+                <td><span id="num_items_error" style="color: red;"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">
+                    <button type="button" onclick="generateItemRows()" class="button">Generate Item Rows</button>
+                </td>
+            </tr>
         </table>
-
 
         <table id="item_rows" class="center-table">
             <!-- Item rows will be dynamically generated here -->
         </table>
 
-         <table id="item_rows2" class="center-table">
-            <!-- Item rows will be dynamically generated here -->
+        <table id="item_rows2" class="center-table">
+            <!-- Submit button row will be dynamically generated here -->
         </table>
-
-
-
     </form>
 
     <script>
-        function generateItemRows() {
-            const numItems = document.getElementById('num_items').value;
-            const itemRows = document.getElementById('item_rows');
-            const itemRows2 = document.getElementById('item_rows2');
-            itemRows.innerHTML = ''; // Clear any existing rows
-            if (numItems > 15) {
-                alert("Number of rows cannot exceed 15.");
-                return;
+        function validateBillNumber() {
+            const billNumber = document.getElementById('bill_number').value;
+            const errorSpan = document.getElementById('bill_number_error');
+            if (billNumber.length < 1 || billNumber.length > 10) {
+                errorSpan.textContent = 'Bill number must be between 1 and 10 characters.';
+                return false;
+            } else {
+                errorSpan.textContent = '';
+                return true;
             }
-
-            for (let i = 0; i < numItems; i++) {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-
-                    <td for="item_name_${i}">Item Name:</td>
-                    <td><input type="text" id="item_name_${i}" name="item_name_${i}" required></td>
-
-                    <td for="item_type_${i}">Item Type:</td>
-                    <td><input type="text" id="item_type_${i}" name="item_type_${i}" required></td>
-
-                    <td for="quantity_${i}">Quantity:</td>
-                    <td><input type="number" id="quantity_${i}" name="quantity_${i}" required></td>
-
-                    <td for="warranty_period_${i}">Warranty Period:</td>
-                    <td><input type="text" id="warranty_period_${i}" name="warranty_period_${i}" required></td>
-                `;
-                itemRows.appendChild(row);
-            }
-            const rows = itemRows2.getElementsByTagName('tr');
-            if (rows.length === 0)
-            {
-            // If no rows exist, create and append the new row
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td colspan="8" class="center-table">
-                    <input type="submit" value="Submit" class="button">
-                </td>
-            `;
-            itemRows2.appendChild(row);
-            }
-
         }
-        function validateForm() {
+
+        function validateBillDate() {
             const billDateInput = document.getElementById('bill_date');
             const billDate = new Date(billDateInput.value);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             if (billDate > today) {
-                alert("Bill date cannot be in the future.");
+                document.getElementById('bill_date_error').textContent = 'Bill date cannot be in the future.';
                 return false;
+            } else {
+                document.getElementById('bill_date_error').textContent = '';
+                return true;
             }
-            return true;
         }
 
+        function validateBillAmount() {
+            const billAmount = document.getElementById('bill_amount').value;
+            const errorSpan = document.getElementById('bill_amount_error');
+            if (billAmount < 1 || billAmount > 1000000) {
+                errorSpan.textContent = 'Bill amount must be between 1 and 1,000,000.';
+                return false;
+            } else {
+                errorSpan.textContent = '';
+                return true;
+            }
+        }
+
+        function validateNumItems() {
+            const numItems = document.getElementById('num_items').value;
+            const errorSpan = document.getElementById('num_items_error');
+            if (numItems < 1 || numItems > 10) {
+                errorSpan.textContent = 'Number of rows must be between 1 and 10.';
+                return false;
+            } else {
+                errorSpan.textContent = '';
+                return true;
+            }
+        }
+
+        function validateItemName(index) {
+            const itemName = document.getElementById('item_name_' + index).value;
+            if (itemName.length < 1 || itemName.length > 25) {
+                document.getElementById('item_name_error_' + index).textContent = 'Item name must be between 1 and 25 characters.';
+                return false;
+            } else {
+                document.getElementById('item_name_error_' + index).textContent = '';
+                return true;
+            }
+        }
+
+        function validateItemType(index) {
+            const itemType = document.getElementById('item_type_' + index).value;
+            if (itemType.length < 1 || itemType.length > 25) {
+                document.getElementById('item_type_error_' + index).textContent = 'Item type must be between 1 and 25 characters.';
+                return false;
+            } else {
+                document.getElementById('item_type_error_' + index).textContent = '';
+                return true;
+            }
+        }
+
+        function validateQuantity(index) {
+            const quantity = document.getElementById('quantity_' + index).value;
+            if (quantity < 1 || quantity > 25) {
+                document.getElementById('quantity_error_' + index).textContent = 'Quantity must be between 1 and 25.';
+                return false;
+            } else {
+                document.getElementById('quantity_error_' + index).textContent = '';
+                return true;
+            }
+        }
+
+        function validateWarrantyPeriod(index) {
+            const warrantyPeriod = document.getElementById('warranty_period_' + index).value;
+            const errorSpan = document.getElementById('warranty_error_' + index);
+            if (warrantyPeriod < 0 || warrantyPeriod > 10) {
+                errorSpan.textContent = 'Warranty period must be between 1 and 10.';
+                return false;
+            } else {
+                errorSpan.textContent = '';
+                return true;
+            }
+        }
+
+        document.getElementById('bill_number').addEventListener('change', validateBillNumber);
+        document.getElementById('bill_amount').addEventListener('change', validateBillAmount);
+        document.getElementById('num_items').addEventListener('change', validateNumItems);
         document.getElementById('bill_date').addEventListener('change', function() {
             const billDate = new Date(this.value);
             const today = new Date();
@@ -113,8 +157,74 @@
             if (billDate > today) {
                 alert("Bill date cannot be in the future.");
                 this.value = '';
+            } else {
+                document.getElementById('bill_date_error').textContent = '';
             }
         });
+
+        function generateItemRows() {
+            const numItems = document.getElementById('num_items').value;
+            const itemRows = document.getElementById('item_rows');
+            const itemRows2 = document.getElementById('item_rows2');
+            itemRows.innerHTML = ''; // Clear any existing rows
+            itemRows2.innerHTML = ''; // Clear any existing rows in item_rows2
+
+            if (validateNumItems()) {
+                for (let i = 0; i < numItems; i++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>Item Name:</td>
+                        <td><input type="text" id="item_name_${i}" name="item_name_${i}" required></td>
+                        <td><span id="item_name_error_${i}" style="color: red;"></span></td>
+
+                        <td>Item Type:</td>
+                        <td><input type="text" id="item_type_${i}" name="item_type_${i}" required></td>
+                        <td><span id="item_type_error_${i}" style="color: red;"></span></td>
+
+                        <td>Quantity:</td>
+                        <td><input type="number" id="quantity_${i}" name="quantity_${i}" required></td>
+                        <td><span id="quantity_error_${i}" style="color: red;"></span></td>
+
+                        <td>Warranty Period:</td>
+                        <td><input type="number" id="warranty_period_${i}" name="warranty_period_${i}" required></td>
+                        <td><span id="warranty_error_${i}" style="color: red;"></span></td>
+                    `;
+                    itemRows.appendChild(row);
+
+                    // Add event listeners for dynamically generated fields
+                    document.getElementById('item_name_' + i).addEventListener('change', function() { validateItemName(i); });
+                    document.getElementById('item_type_' + i).addEventListener('change', function() { validateItemType(i); });
+                    document.getElementById('quantity_' + i).addEventListener('change', function() { validateQuantity(i); });
+                    document.getElementById('warranty_period_' + i).addEventListener('change', function() { validateWarrantyPeriod(i); });
+                }
+
+                // Create and append the submit button row
+                const submitRow = document.createElement('tr');
+                submitRow.innerHTML = `
+                    <td colspan="8" class="center-table">
+                        <input type="submit" value="Submit" class="button">
+                    </td>
+                `;
+                itemRows2.appendChild(submitRow);
+            }
+        }
+
+        function validateForm() {
+            const isBillNumberValid = validateBillNumber();
+            const isBillAmountValid = validateBillAmount();
+            const isNumItemsValid = validateNumItems();
+            const isBillDateValid = validateBillDate();
+
+            let areItemsValid = true;
+            const numItems = document.getElementById('num_items').value;
+            for (let i = 0; i < numItems; i++) {
+                if (!validateItemName(i) || !validateItemType(i) || !validateQuantity(i) || !validateWarrantyPeriod(i)) {
+                    areItemsValid = false;
+                }
+            }
+
+            return isBillNumberValid && isBillAmountValid && isNumItemsValid && isBillDateValid && areItemsValid;
+        }
     </script>
 </body>
 </html>

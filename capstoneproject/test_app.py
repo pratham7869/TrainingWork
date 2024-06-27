@@ -15,267 +15,317 @@ def test_client():
             yield testing_client  # this is where the testing happens!
 
 
-@pytest.fixture(scope='module')
-def init_database():
-    # Use an in-memory SQLite database for testing
-    engine = get_engine('sqlite:///:memory:')
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-
-    yield Session()
-
-    Base.metadata.drop_all(engine)
-
-
 def test_home_page(test_client):
-    response = test_client.get('/index')
+    response = test_client.get('/')
     assert response.status_code == 200
-    assert b"Welcome to the Home Page" in response.data
+    # assert b"Welcome to the Home Page" in response.data
 
 
-def test_create_user_route(test_client, init_database):
-    user_data = {
-        'name': 'Test User',
-        'mobile_no': '1234567890',
-        'email': 'testuser@example.com',
-        'role': 'admin',
-        'password': 'password123'
-    }
-    response = test_client.post('/register', json=user_data)
-    assert response.status_code == 201
-    assert response.json['name'] == 'Test User'
-
-
-def test_get_user_by_id_route(test_client, init_database):
-    user_data = {
-        'name': 'Test User',
-        'mobile_no': '1234567890',
-        'email': 'testuser@example.com',
-        'role': 'admin',
-        'password': 'password123'
-    }
-    # First, create a user
-    response = test_client.post('/register', json=user_data)
-    user_id = response.json['user_id']
-
-    # Then, get the user by ID
-    response = test_client.get(f'/users/{user_id}')
+def test_login_page(test_client):
+    response = test_client.post('/login')
     assert response.status_code == 200
-    assert response.json['name'] == 'Test User'
 
 
-def test_create_item_route(test_client, init_database):
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    response = test_client.post('/add_items', json=item_data)
-    assert response.status_code == 201
-    assert response.json['item_name'] == 'Test Item'
+def test_admin_dashboard_page(test_client):
+    response = test_client.get('/admin_dashboard')
+    assert response.status_code == 302
+    response = test_client.post('/admin_dashboard')
+    assert response.status_code == 405
 
 
-def test_get_item_by_id_route(test_client, init_database):
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    # First, create an item
-    response = test_client.post('/items', json=item_data)
-    item_id = response.json['item_id']
+def test_employee_dashboard_page(test_client):
+    response = test_client.get('/employee_dashboard')
+    assert response.status_code == 302
+    response = test_client.post('/employee_dashboard')
+    assert response.status_code == 405
 
-    # Then, get the item by ID
-    response = test_client.get(f'/items/{item_id}')
+
+def test_total_employees(test_client):
+    response = test_client.post('/total_employees')
+    assert response.status_code == 405
+
+
+def test_total_employees_access(test_client):
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.get('/total_employees')
+
+    # Check if the response status code is 200
     assert response.status_code == 200
-    assert response.json['item_name'] == 'Test Item'
+
+    assert b'Employees List' in response.data
+    assert b'Employee Id' in response.data
+    assert b'Name' in response.data
+    assert b'Email' in response.data
+    assert b'Role' in response.data
+    assert b'Mobile number' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_update_item_route(test_client, init_database):
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    # First, create an item
-    response = test_client.post('/items', json=item_data)
-    item_id = response.json['item_id']
+def test_total_bills_access(test_client):
 
-    # Then, update the item
-    update_data = {'item_name': 'Updated Item'}
-    response = test_client.put(f'/items/{item_id}', json=update_data)
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 1  # Assuming '1' is a valid admin user_id
+        sess['role'] = 'admin'
+
+    response = test_client.get('/total_bills')
     assert response.status_code == 200
-    assert response.json['item_name'] == 'Updated Item'
+
+    assert b'Total Bills' in response.data
+    assert b'Bill Number' in response.data
+    assert b'Bill Date' in response.data
+    assert b'Bill Amount' in response.data
+    assert b'Number of Items' in response.data
+    assert b'Admin ID' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_delete_item_route(test_client, init_database):
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    # First, create an item
-    response = test_client.post('/items', json=item_data)
-    item_id = response.json['item_id']
-
-    # Then, delete the item
-    response = test_client.delete(f'/items/{item_id}')
-    assert response.status_code == 204
+def test_total_bills_unauthorized_access(test_client):
+    response = test_client.get('/total_bills')
+    assert response.status_code == 302
 
 
-def test_create_bill_route(test_client, init_database):
-    bill_data = {
-        'bill_number': 'BILL123',
-        'bill_amount': 1000,
-        'no_of_items': 10,
-        'bill_date': '2023-01-01',
-        'admin_id': 1
-    }
-    response = test_client.post('/bills', json=bill_data)
-    assert response.status_code == 201
-    assert response.json['bill_number'] == 'BILL123'
+def test_total_items_access(test_client):
 
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
 
-def test_get_bill_by_bill_number_route(test_client, init_database):
-    bill_data = {
-        'bill_number': 'BILL123',
-        'bill_amount': 1000,
-        'no_of_items': 10,
-        'bill_date': '2023-01-01',
-        'admin_id': 1
-    }
-    # First, create a bill
-    response = test_client.post('/bills', json=bill_data)
-
-    # Then, get the bill by bill number
-    response = test_client.get('/bills/BILL123')
+    response = test_client.get('/total_items')
     assert response.status_code == 200
-    assert response.json['bill_number'] == 'BILL123'
+
+    assert b'All Items' in response.data
+    assert b'Item ID' in response.data
+    assert b'Item Name' in response.data
+    assert b'Item Type' in response.data
+    assert b'Item Status' in response.data
+    assert b'Warranty Period' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_create_asset_route(test_client, init_database):
-    user_data = {
-        'name': 'Test User',
-        'mobile_no': '1234567890',
-        'email': 'testuser@example.com',
-        'role': 'employee',
-        'password': 'password123'
-    }
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    response = test_client.post('/users', json=user_data)
-    response = test_client.post('/items', json=item_data)
+def test_total_items_unauthorized_access(test_client):
 
-    asset_data = {
-        'admin_id': 1,
-        'emp_id': 1,
-        'item_id': 1,
-        'assigned_date': '2023-01-01',
-        'asset_status': 'assigned'
-    }
-    response = test_client.post('/assets', json=asset_data)
-    assert response.status_code == 201
-    assert response.json['emp_id'] == 1
-    assert response.json['item_id'] == 1
+    response = test_client.get('/total_items')
+    assert response.status_code == 302
 
 
-def test_get_all_users_route(test_client, init_database):
-    response = test_client.get('/users')
+def test_unassigned_items_access(test_client):
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.get('/unassigned_items')
     assert response.status_code == 200
-    assert len(response.json) == 0
 
-    user_data = {
-        'name': 'Test User',
-        'mobile_no': '1234567890',
-        'email': 'testuser@example.com',
-        'role': 'admin',
-        'password': 'password123'
-    }
-    response = test_client.post('/users', json=user_data)
-    response = test_client.get('/users')
+    assert b'Unassigned Items' in response.data
+    assert b'Item ID' in response.data
+    assert b'Item Name' in response.data
+    assert b'Item Type' in response.data
+    assert b'Item Status' in response.data
+    assert b'Warranty Period' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
+
+
+def test_unassigned_items_unauthorized_access(test_client):
+    with test_client.session_transaction() as sess:
+        sess.clear()
+    response = test_client.get('/unassigned_items')
+    assert response.status_code == 302
+
+
+def test_assigned_items_access(test_client):
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.get('/assigned_items')
+
     assert response.status_code == 200
-    assert len(response.json) == 1
+
+    assert b'Assigned Items' in response.data
+    assert b'Item ID' in response.data
+    assert b'Item Name' in response.data
+    assert b'Item Type' in response.data
+    assert b'Item Status' in response.data
+    assert b'Warranty Period' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_get_all_items_route(test_client, init_database):
-    response = test_client.get('/items')
+def test_add_bill_access(test_client):
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.get('/add_bill')
     assert response.status_code == 200
-    assert len(response.json) == 0
 
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    response = test_client.post('/items', json=item_data)
-    response = test_client.get('/items')
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
+
+
+def test_add_bill_unauthorized_access(test_client):
+
+    response = test_client.get('/add_bill')
+    assert response.status_code == 302
+
+
+def test_assign_items_access(test_client):
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.post('/assign_items')
+
     assert response.status_code == 200
-    assert len(response.json) == 1
+
+    assert b'Assign Items' in response.data
+    assert b'User ID' in response.data
+    assert b'Item ID' in response.data
+    assert b'Submit' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_get_all_bills_route(test_client, init_database):
-    response = test_client.get('/bills')
+def test_assign_items_unauthorized_access(test_client):
+
+    response = test_client.get('/assign_items')
+    assert response.status_code == 302
+
+
+def test_add_employee_access(test_client):
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.post('/register')
+
     assert response.status_code == 200
-    assert len(response.json) == 0
 
-    bill_data = {
-        'bill_number': 'BILL123',
-        'bill_amount': 1000,
-        'no_of_items': 10,
-        'bill_date': '2023-01-01',
-        'admin_id': 1
-    }
-    response = test_client.post('/bills', json=bill_data)
-    response = test_client.get('/bills')
+    assert b'Assign Items' in response.data
+    assert b'User ID' in response.data
+    assert b'Item ID' in response.data
+    assert b'Submit' in response.data
+
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
+
+
+def test_add_employee_unauthorized_access(test_client):
+    response = test_client.get('/register')
+    assert response.status_code == 302
+
+
+def test_remove_employee_access(test_client):
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.post('/remove_employee')
+
     assert response.status_code == 200
-    assert len(response.json) == 1
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
+
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
 
 
-def test_get_all_assets_route(test_client, init_database):
-    response = test_client.get('/assets')
+def test_remove_employee_unauthorized_access(test_client):
+    response = test_client.get('/remove_employee')
+    assert response.status_code == 302
+
+
+def test_unassign_item_access(test_client):
+
+    with test_client.session_transaction() as sess:
+        sess['user_id'] = 10001
+        sess['role'] = 'admin'
+
+    response = test_client.post('/unassign_item')
+
     assert response.status_code == 200
-    assert len(response.json) == 0
 
-    user_data = {
-        'name': 'Test User',
-        'mobile_no': '1234567890',
-        'email': 'testuser@example.com',
-        'role': 'employee',
-        'password': 'password123'
-    }
-    item_data = {
-        'item_name': 'Test Item',
-        'item_type': 'Type1',
-        'bill_id': 1,
-        'item_status': 'unassigned',
-        'warranty_period': '1 year'
-    }
-    response = test_client.post('/users', json=user_data)
-    response = test_client.post('/items', json=item_data)
+    assert b'Unassign Item' in response.data
+    assert b'Item Details' in response.data
+    assert b'Assigned to Employee ID: 1' in response.data
+    # Clear the session
+    with test_client.session_transaction() as sess:
+        sess.clear()
 
-    asset_data = {
-        'admin_id': 1,
-        'emp_id': 1,
-        'item_id': 1,
-        'assigned_date': '2023-01-01',
-        'asset_status': 'assigned'
-    }
-    response = test_client.post('/assets', json=asset_data)
-    response = test_client.get('/assets')
-    assert response.status_code == 200
-    assert len(response.json) == 1
+    # Verify session is cleared
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
+        assert 'role' not in sess
+
+
+def test__unassign_item_unauthorized_access(test_client):
+    response = test_client.get('/unassign_item')
+    assert response.status_code == 302

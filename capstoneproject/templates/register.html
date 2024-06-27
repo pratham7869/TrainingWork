@@ -19,24 +19,45 @@
                 <td>{{ form.name(size=32) }}</td>
             </tr>
             <tr>
+                <td colspan="2" class="center-table">{% for error in form.name.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
+            </tr>
+            <tr>
                 <td>{{ form.mobile_no.label }}</td>
                 <td>{{ form.mobile_no(size=32) }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">{% for error in form.mobile_no.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
             </tr>
             <tr>
                 <td>{{ form.email.label }}</td>
                 <td>{{ form.email(size=32) }}</td>
             </tr>
             <tr>
+                <td colspan="2" class="center-table">{% for error in form.email.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
+
+            </tr>
+            <tr>
                 <td>{{ form.new_password.label }}</td>
                 <td>{{ form.new_password(size=32) }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">{% for error in form.new_password.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
+
             </tr>
             <tr>
                 <td>{{ form.confirm_password.label }}</td>
                 <td>{{ form.confirm_password(size=32) }}</td>
             </tr>
             <tr>
+                <td colspan="2" class="center-table">{% for error in form.confirm_password.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
+
+            </tr>
+            <tr>
                 <td>{{ form.Role.label }}</td>
                 <td>{{ form.Role() }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="center-table">{% for error in form.Role.errors %}<span style="color: red;">{{ error }}</span>{% endfor %}</td>
             </tr>
             <tr>
                 <td colspan="2" class="center-table">
@@ -47,20 +68,6 @@
     </form>
    {% if error %}
         <p style="color: red;" align="center" id="error-message">{{ error }}</p>
-    {% endif %}
-    <script>
-        function validateEmail() {
-            const emailField = document.querySelector('[name="email"]');
-            const errorMessage = document.getElementById('error-message');
-            const email = emailField.value;
-            const domain = email.substring(email.lastIndexOf('@') + 1);
-            errorMessage.textContent = domain;
-            if (domain !== 'nucleusteq.com') {
-                errorMessage.textContent = 'Email must be a company email (e.g., pratham@nucleusteq.com).';
-                return false;
-            }
-            return true;
-        }
-    </script>
+   {% endif %}
 </body>
 </html>

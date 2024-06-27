@@ -1,0 +1,185 @@
+<script>
+        function validateEmail() {
+            const emailField = document.querySelector('[name="email"]');
+            const errorMessage = document.getElementById('error-message');
+            const email = emailField.value;
+            const domain = email.substring(email.lastIndexOf('@') + 1);
+            errorMessage.textContent = domain;
+            if (domain != 'nucleusteq.com') {
+                errorMessage.textContent = 'Email must be a company email (e.g., pratham@nucleusteq.com).';
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+
+
+
+
+        function generateItemRows() {
+            const numItems = document.getElementById('num_items').value;
+            const itemRows = document.getElementById('item_rows');
+            const itemRows2 = document.getElementById('item_rows2');
+            itemRows.innerHTML = ''; // Clear any existing rows
+            if (numItems > 15) {
+                alert("Number of rows cannot exceed 15.");
+                return;
+            }
+
+            for (let i = 0; i < numItems; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+
+                    <td for="item_name_${i}">Item Name:</td>
+                    <td><input type="text" id="item_name_${i}" name="item_name_${i}" required></td>
+
+                    <td for="item_type_${i}">Item Type:</td>
+                    <td><input type="text" id="item_type_${i}" name="item_type_${i}" required></td>
+
+                    <td for="quantity_${i}">Quantity:</td>
+                    <td><input type="number" id="quantity_${i}" name="quantity_${i}" required></td>
+
+                    <td for="warranty_period_${i}">Warranty Period:</td>
+                    <td><input type="text" id="warranty_period_${i}" name="warranty_period_${i}" required></td>
+                `;
+                itemRows.appendChild(row);
+            }
+            const rows = itemRows2.getElementsByTagName('tr');
+            if (rows.length === 0)
+            {
+            // If no rows exist, create and append the new row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td colspan="8" class="center-table">
+                    <input type="submit" value="Submit" class="button">
+                </td>
+            `;
+            itemRows2.appendChild(row);
+            }
+
+        }
+        function validateForm() {
+            const billDateInput = document.getElementById('bill_date');
+            const billDate = new Date(billDateInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (billDate > today) {
+                alert("Bill date cannot be in the future.");
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById('bill_date').addEventListener('change', function() {
+            const billDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (billDate > today) {
+                alert("Bill date cannot be in the future.");
+                this.value = '';
+            }
+        });
+
+
+
+# @app.route('/add_employee', methods=['GET', 'POST'])
+# def add_employee():
+#     if 'user_id' not in session or session.get('role') != 'admin':
+#         return redirect(url_for('login'))
+#
+#     form = AddEmployeeForm()
+#     message = None
+#
+#     if form.validate_on_submit():
+#         company_email = form.company_email.data
+#         password = form.password.data
+#         role = form.role.data
+#         admin_id = session['user_id']
+#
+#         # Create valid_id entry
+#         valid_id_data = {
+#             'company_email': company_email,
+#             'password': password,
+#             'role': role,
+#             'register_status': 'unregistered',
+#             'admin_id': admin_id
+#         }
+#         create_valid_id(valid_id_data)
+#
+#         message = f'Employee {company_email} added successfully.'
+#
+#     return render_template('add_employee.html', form=form, message=message)
+
+
+
+
+# @app.route('/verify', methods=['GET', 'POST'])
+# def verify():
+#     form = VerificationForm()
+#     error = None
+#     if form.validate_on_submit():
+#         email = form.email.data
+#         password = form.password.data
+#         valid_id = get_valid_id_by_email(email)
+#
+#         if valid_id and valid_id.password == password:
+#             if valid_id.register_status == 'unregistered':
+#                 session['user_email'] = email  # Store email in session for use in registration
+#                 return redirect(url_for('register'))
+#             else:
+#                 error = 'User is already registered.'
+#         else:
+#             error = 'Invalid email or password.'
+#     return render_template('verify.html', form=form, error=error)
+
+
+// Function to disable back button
+function disableBack() {
+    window.history.forward();
+}
+
+// Call disableBack function on load
+window.onload = disableBack;
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        disableBack();
+    }
+};
+
+// Use popstate event to prevent going back
+window.addEventListener('popstate', function(event) {
+    window.history.pushState(null, '', window.location.href);
+});
+
+
+# logging_config.py
+import logging
+from logging.handlers import RotatingFileHandler
+
+
+def setup_logging():
+    # Create a custom logger
+    logger = logging.getLogger('app_logger')
+    logger.setLevel(logging.DEBUG)
+
+    # Create handlers
+    c_handler = logging.StreamHandler()
+    f_handler = RotatingFileHandler('app.log', maxBytes=2000, backupCount=10)
+    c_handler.setLevel(logging.WARNING)
+    f_handler.setLevel(logging.DEBUG)
+
+    # Create formatters and add it to handlers
+    c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    c_handler.setFormatter(c_format)
+    f_handler.setFormatter(f_format)
+
+    # Add handlers to the logger
+    logger.addHandler(c_handler)
+    logger.addHandler(f_handler)
+
+    return logger

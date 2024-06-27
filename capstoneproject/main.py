@@ -1,3 +1,5 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from db_crud import *
 from models import *
 
@@ -37,14 +39,23 @@ user_data = {
 # billn = get_bill_id_by_number("2324-011")
 # print(billn)
 
-item_data = {
-    'item_name': 'New Item',
-    'bill_id': 125,
-    'item_type': 'Electronics',
-    'item_status': 'unassigned',
-    'warranty_period': '1 year',
-    'bill_id': '1'
-}
+# item_data = {
+#     'item_name': 'New Item',
+#     'bill_id': 125,
+#     'item_type': 'Electronics',
+#     'item_status': 'unassigned',
+#     'warranty_period': '1 year',
+#     'bill_id': '1'
+# }
+#
+# item_id = add_item_and_return_id(item_data)
+# print(f"New item ID: {item_id}")
 
-item_id = add_item_and_return_id(item_data)
-print(f"New item ID: {item_id}")
+try:
+    item_id = 4
+    delete_item_by_id(item_id)
+    print("item deleted..")
+except SQLAlchemyError as e:
+    print("error occured")
+
+
