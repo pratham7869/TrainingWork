@@ -12,6 +12,9 @@
 
     <h1 align="center">Assigned Items</h1>
     </header>
+    {% if error %}
+        <p style="color: red;" align="center">{{ error }}</p>
+    {% endif %}
     <table class="center-table">
         <thead>
             <tr>
@@ -20,7 +23,7 @@
                 <th>Item type</th>
                 <th>Item Status</th>
                 <th>Warranty Period<br>(In years)</th>
-
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -31,9 +34,22 @@
                 <td>{{ item.item_type }}</td>
                 <td>{{ item.item_status }}</td>
                 <td>{{ item.warranty_period }}</td>
+                <td>
+                <form id="UnassignForm{{ item.item_id }}" method="POST" action="{{ url_for('unassign_item_direct') }}" style="display:inline;">
+                    <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                    <button type="submit" onclick="confirmUnassign('{{ item.item_id }}')" class="button">Unassign</button>
+                </form>
+            </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <script>
+        function confirmUnassign(itemId) {
+            if (confirm("Are you sure you want to unassign this item?")) {
+                document.getElementById("UnassignForm" + itemId).submit();
+            }
+        }
+    </script>
 </body>
 </html>

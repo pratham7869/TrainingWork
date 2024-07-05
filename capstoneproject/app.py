@@ -207,6 +207,30 @@ def total_bills():
         return render_template('index.html')
 
 
+@app.route('/unassign_item_direct', methods=['POST'])
+def unassign_item_direct():
+    try:
+        if 'user_id' not in session or session.get('role') != 'admin':
+            return redirect(url_for('login'))
+        logger.debug('unassign_item action initiated')
+        error = None
+
+        item_id = request.form.get('item_id')
+        if item_id:
+            # Unassign the item
+            update_item(item_id, {'item_status': 'unassigned'})
+            update_asset(item_id, {'asset_status': 'unassigned', 'unassigned_date': date.today()})
+            error = f"Item {item_id} has been unassigned successfully."
+            assigned_items = get_all_assigned_items()
+        else:
+            error = 'Item ID is missing.'
+
+        return render_template('assigned_items.html', error=error, assigned_items=assigned_items)
+    except Exception as e:
+        logger.error(f'Error unassigning item: {e}')
+        return render_template('assigned_items.html', error=error, assigned_items=assigned_items)
+
+
 @app.route('/assigned_items')
 def all_assigned_items():
     try:
